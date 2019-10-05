@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@koa/router": "^8.0.1",
+    "koa": "^2.8.2",
+    "mongoose": "^5.7.3"
+  },
+  "name": "tolbank-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/kimdoyeong/tolbank-backend.git",
+  "author": "jeekc0308 <jeekc0308@gmail.com>",
+  "license": "MIT"
+}
