@@ -1,13 +1,23 @@
 {
   "dependencies": {
+    "@koa/cors": "^3.0.0",
     "@koa/router": "^8.0.1",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.8.2",
+    "koa-bodyparser": "^4.2.1",
     "mongoose": "^5.7.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
   },
   "name": "tolbank-backend",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/kimdoyeong/tolbank-backend.git",
   "author": "jeekc0308 <jeekc0308@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  }
 }
