@@ -15,8 +15,8 @@ router.post("/", async ctx => {
     return ctx.throw(404, "아이디가 없거나 비밀번호가 다릅니다.");
   }
 
-  const { username } = user;
-  const data = { username, id };
+  const { username, _id } = user;
+  const data = { username, id, _id };
   const _token = await token.sign(data);
 
   ctx.status = 201;

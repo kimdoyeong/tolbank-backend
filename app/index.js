@@ -1,5 +1,6 @@
 const Koa = require("koa");
 const cors = require("@koa/cors");
+const range = require("koa-range");
 const bodyParser = require("koa-bodyparser");
 const app = new Koa();
 
@@ -8,6 +9,7 @@ const path = require("path");
 
 app.use(cors());
 app.use(bodyParser());
+app.use(range);
 app.use(async (ctx, next) => {
   try {
     await next();
