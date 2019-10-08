@@ -11,6 +11,7 @@ router.get("*", async ctx => {
   if (!path) ctx.throw(404, "File not found");
 
   ctx.length = fs.statSync(path).size - 1;
+  ctx.type = path.replace(/^.+\./, "");
   ctx.body = fs.createReadStream(path);
 });
 router.post("*/token", auth, async ctx => {
