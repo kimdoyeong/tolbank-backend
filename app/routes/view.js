@@ -1,18 +1,36 @@
 const Router = require("@koa/router");
 const file = require("../../lib/file");
-const fs = require("fs");
 const { auth } = require("../../lib/middlewares/auth");
+const fs = require("fs");
 const router = new Router({
   prefix: "/view"
 });
 
 router.get("*", async ctx => {
-  const path = await file.getFilePath(ctx.query.token);
-  if (!path) ctx.throw(404, "File not found");
+  const o = await file.getFilePath(ctx.query.token);
+  if (o === null) ctx.throw(404, "File not found");
 
-  ctx.length = fs.statSync(path).size - 1;
-  ctx.type = path.replace(/^.+\./, "");
-  ctx.body = fs.createReadStream(path);
+  const { headers } = ctx;
+
+  const length = fs.statSync(o).size;
+
+  ctx.type = o.replace(/\.(.+?)$/, "$1");
+  if (headers.range) {
+    const range = headers.range.replace(/^bytes=/, "");
+    let [start, end] = range.split(" ").map(v => parseInt(v));
+    if (!end) {
+      end = length - 1;
+    }
+    const stream = fs.createReadStream(o, { start, end });
+    ctx.length = length;
+    ctx.set("Content-Range", `bytes ${start}-${end}/${length}`);
+    ctx.status = 206;
+    ctx.body = stream;
+  } else {
+    ctx.length = length;
+    ctx.status = 200;
+    ctx.body = fs.createReadStream(o);
+  }
 });
 router.post("*/token", auth, async ctx => {
   const token = await file.getToken(ctx.state.user, ctx.params[0]);
