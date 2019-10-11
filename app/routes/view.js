@@ -14,7 +14,7 @@ router.get("*", async ctx => {
 
   const length = fs.statSync(o).size;
 
-  ctx.type = o.replace(/\.(.+?)$/, "$1");
+  ctx.type = o.replace(/.+\.(.+?)$/, "$1");
   if (headers.range) {
     const range = headers.range.replace(/^bytes=/, "");
     let [start, end] = range.split(" ").map(v => parseInt(v));
