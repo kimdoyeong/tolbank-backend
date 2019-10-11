@@ -15,20 +15,22 @@ router.get("*", async ctx => {
   const length = fs.statSync(o).size;
 
   ctx.type = o.replace(/.+\.(.+?)$/, "$1");
+  ctx.set("Accept-Ranges", "bytes");
   if (headers.range) {
     const range = headers.range.replace(/^bytes=/, "");
-    let [start, end] = range.split(" ").map(v => parseInt(v));
+    let [start, end] = range.split("-").map(v => parseInt(v));
     if (!end) {
       end = length - 1;
     }
     const stream = fs.createReadStream(o, { start, end });
-    ctx.length = length;
+    ctx.length = end - start + 1;
     ctx.set("Content-Range", `bytes ${start}-${end}/${length}`);
     ctx.status = 206;
     ctx.body = stream;
   } else {
-    ctx.length = length;
+    ctx.length = length + 1;
     ctx.status = 200;
+    ctx.set("Content-Range", `bytes 0-${length - 1}/${length}`);
     ctx.body = fs.createReadStream(o);
   }
 });
